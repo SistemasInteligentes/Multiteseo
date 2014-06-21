@@ -1,93 +1,24 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
-package Agente;
+package unalcol.agents.examples.labyrinth.multeseo.cai;
 
 import java.util.ArrayList;
-import unalcol.agents.Action;
-import unalcol.agents.AgentProgram;
-import unalcol.agents.Percept;
-import unalcol.agents.examples.labyrinth.LabyrinthPercept;
-import unalcol.agents.simulate.util.Language;
-import unalcol.agents.simulate.util.SimpleLanguage;
-import unalcol.types.collection.vector.Vector;
+import unalcol.agents.examples.labyrinth.teseo.simple.SimpleTeseoAgentProgram;
 
-/**
- *
- * @author ian
- */
-public class TesoCai extends Agente.SimpleTeseoAgentProgram{
-    
-    protected Language language;
-    protected Vector<String> cmd = new Vector<String>();
-    
+public class TeseoCai extends SimpleTeseoAgentProgram {
+
     ArrayList<String> coor = new ArrayList<>();
     ArrayList<Integer> ac = new ArrayList<>();
     ArrayList<Integer> giros = new ArrayList<>();
     int giro = 0;
-        
-    public TesoCai(){
+
+    public TeseoCai() {
         coor.add("0,0");
         giros.add(0);
-    }
-    
-    public void setLanguage(  SimpleLanguage _language ){
-        language = _language;
-    }
-    
-    @Override
-    public void init() {
-        this.cmd.clear();
-    }    
-    /**
-     * execute
-     *
-     * @param perception Perception
-     * @return Action[]
-     */
-    @Override     
-    public Action compute(Percept perception) {
         
-        if( cmd.size() == 0 ){
-            
-            boolean PF = ((Boolean) perception.getAttribute(language.getPercept(language.getPerceptIndex("front"))));
-            boolean PD = ((Boolean) perception.getAttribute(language.getPercept(language.getPerceptIndex("right"))));
-            boolean PA = ((Boolean) perception.getAttribute(language.getPercept(language.getPerceptIndex("back"))));
-            boolean PI = ((Boolean) perception.getAttribute(language.getPercept(language.getPerceptIndex("left"))));
-            
-            boolean AF = ((Boolean) perception.getAttribute(language.getPercept(language.getPerceptIndex("afront"))));
-            boolean AD = ((Boolean) perception.getAttribute(language.getPercept(language.getPerceptIndex("aright"))));
-            boolean AA = ((Boolean) perception.getAttribute(language.getPercept(language.getPerceptIndex("aback"))));
-            boolean AI = ((Boolean) perception.getAttribute(language.getPercept(language.getPerceptIndex("aleft"))));
-            
-            boolean MT = ((Boolean) perception.getAttribute(language.getPercept(language.getPerceptIndex("exit"))));
-                  
-            int d = accion(PF, PD, PA, PI, AF, AD, AA, AI, MT);
-            
-            if (0 <= d && d < 4) {
-                for (int i = 1; i <= d; i++) {
-                    cmd.add(language.getAction(3)); //rotate
-                }
-                cmd.add(language.getAction(2)); // advance
-            }
-            else if(d == -1){
-                cmd.add(language.getAction(0)); // no_op
-            }
-            else{
-                cmd.add(language.getAction(1)); // die
-            }
-        }
-        String x = cmd.get(0);
-        cmd.remove(0);
-        
-        return new Action(x);
     }
 
     @Override
-    public int accion(boolean PF, boolean PD, boolean PA, boolean PI, boolean AF, boolean AD, boolean AA, boolean AI, boolean MT) {
+    public int accion(boolean PF, boolean PD, boolean PA, boolean PI, boolean MT) {
+        //retorna la Posición del vector que se ha repetido el movimiento
         int pos_rep = memoria();
         if (pos_rep == -1) {
             if (MT) {
@@ -204,9 +135,13 @@ public class TesoCai extends Agente.SimpleTeseoAgentProgram{
         }
 
         return -2;
+
+
+
     }
-    
-    public int memoria() {        
+
+    public int memoria() {
+        
         //for (int i = 0; i < coor.size() - 1; i++) {
         for (int i = coor.size()-2; i >= 0 ; i--) {
             if ((coor.get(i).equals(coor.get(coor.size()-1)))  && (giros.get(i) == giro)) {
@@ -239,10 +174,4 @@ public class TesoCai extends Agente.SimpleTeseoAgentProgram{
          //ac.add(decision);
 
     }
-    
-    public boolean goalAchieved( Percept p ){
-        return (((Boolean)p.getAttribute(language.getPercept(4))).booleanValue());
-    }
-   
-    
 }
