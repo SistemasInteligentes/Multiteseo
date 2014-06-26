@@ -17,15 +17,15 @@ import unalcol.agents.examples.reversi.Reversi;
 public class Othello implements AgentProgram {
 
     protected String color;
-    
-        int count = 0;
-        ReversiBoard board;
-        Move move;
-        int n;
-        int win;
-        int j;
-        int drawn;
-        int tamano ;
+
+    int count = 0;
+    ReversiBoard board;
+    Move move;
+    int n;
+    int win;
+    int j;
+    int drawn;
+    int tamano;
 
     public Othello(String color) {
         this.color = color;
@@ -33,27 +33,17 @@ public class Othello implements AgentProgram {
 
     @Override
     public Action compute(Percept p) {
-        
-        
-            tamano = (int) p.getAttribute(Reversi.SIZE);
-            board = new ReversiBoard(tamano);
-            board.println();
-            move = new Move();
-            n = 1;
-            win = 0;
-            j = 0;
-            drawn = 0;
-            count++;
-        
 
-//        long time = (long) (200 * Math.random());
-//        try {
-//            Thread.sleep(time);
-//        } catch (Exception e) {
-//        }
+        tamano = (int) p.getAttribute(Reversi.SIZE);
+        board = new ReversiBoard(tamano);
+        move = new Move();
+        n = 1;
+        win = 0;
+        j = 0;
+        drawn = 0;
+        count++;
 
-        
-        if (p.getAttribute(Reversi.TURN).equals(color)){
+        if (p.getAttribute(Reversi.TURN).equals(color)) {
             TKind colorPieza;
             if (color.equals("black")) {
                 colorPieza = TKind.black;
@@ -69,14 +59,13 @@ public class Othello implements AgentProgram {
                 if (board.findMove(colorPieza, 2, move)) {
                     board.move(move, colorPieza);
                 }
-                System.out.println("despues de mover "+color +" en: "+move.i+" : " + move.j);
+                System.out.println("despues de mover " + color + " en: " + move.i + " : " + move.j);
                 board.println();
                 return new Action(move.i + ":" + move.j + ":" + color);
             }
 
             System.out.println("Total#=" + n + "  Win#=" + win + "  Drawn#=" + drawn);
         }
-
 
         return new Action(Reversi.PASS);
     }
@@ -87,7 +76,7 @@ public class Othello implements AgentProgram {
 
     public ReversiBoard convertirTablero(Percept p) {
         board = new ReversiBoard(tamano);
-
+        System.out.println("tamaño "+tamano);
         for (int i = 0; i < tamano; i++) {
             for (int j = 0; j < tamano; j++) {
                 if (p.getAttribute(i + ":" + j).equals(Reversi.BLACK)) {
